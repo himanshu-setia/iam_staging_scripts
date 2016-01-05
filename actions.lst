@@ -1,0 +1,4 @@
+iam:create_policy
+iam:delete_policy
+iam:update_policy
+iam:attach_policy
