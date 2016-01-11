@@ -28,11 +28,13 @@ file_op = open("insert_actions_bash.sh","w")
 if len(sys.argv) != 1:
     user = sys.argv[1]
     password = sys.argv[2]
+    hostname = sys.argv[3]
 else:
     user = raw_input('Enter mysql user: ')
     password = raw_input('Enter mysql password: ')
+    hostname = raw_input('Enter mysql hostname: ')
 
-hostname = socket.gethostname()
+#hostname = socket.gethostname()
 
 for line in file:
     line_op = "mysql -u" + user + " -p" + password + " -h" + hostname + " keystone -e \""+line.rstrip()+"\"\n"

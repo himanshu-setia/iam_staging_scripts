@@ -3,9 +3,10 @@
 
 read -p "Enter mysql username : " MYSQL_USER
 read -p "Enter mysql password : " MYSQL_PASSWORD
+read -p "Enter mysql machine  : " MYSQL_HOSTNAME 
 
 # INSERT ACTIONS IN ACTION TABLE
-python insert_action_bash_gen_script.py MYSQL_USER MYSQL_PASSWORD
+python insert_action_bash_gen_script.py $MYSQL_USER $MYSQL_PASSWORD $MYSQL_HOSTNAME
 sh insert_actions_bash.sh
 
 # CREATE JCS_DOMAIN 
@@ -78,17 +79,17 @@ openstack role add --domain NaMo --user NaMo_root_user admin
 openstack role add --domain RaGa --user RaGa_root_user admin
 
 # GET USER_IDs IN A VARIABLE
-user_id_dss_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM user WHERE user.name='dss_root_user'"`
-user_id_sbs_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM user WHERE user.name='sbs_root_user'"`
-user_id_rds_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM user WHERE user.name='rds_root_user'"`
-user_id_compute_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM user WHERE user.name='compute_root_user'"`
-user_id_iam_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM user WHERE user.name='iam_root_user'"`
-user_id_vpc_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM user WHERE user.name='vpc_root_user'"`
-user_id_Vishal=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM user WHERE user.name='Vishal'"`
-user_id_Val=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM user WHERE user.name='Val'"`
-user_id_Varughese=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM user WHERE user.name='Varughese'"`
-user_id_NaMo_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM user WHERE user.name='NaMo_root_user'"`
-user_id_RaGa_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM user WHERE user.name='RaGa_root_user'"`
+user_id_dss_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM user WHERE user.name='dss_root_user'"`
+user_id_sbs_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM user WHERE user.name='sbs_root_user'"`
+user_id_rds_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM user WHERE user.name='rds_root_user'"`
+user_id_compute_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM user WHERE user.name='compute_root_user'"`
+user_id_iam_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM user WHERE user.name='iam_root_user'"`
+user_id_vpc_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM user WHERE user.name='vpc_root_user'"`
+user_id_Vishal=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM user WHERE user.name='Vishal'"`
+user_id_Val=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM user WHERE user.name='Val'"`
+user_id_Varughese=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM user WHERE user.name='Varughese'"`
+user_id_NaMo_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM user WHERE user.name='NaMo_root_user'"`
+user_id_RaGa_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM user WHERE user.name='RaGa_root_user'"`
 
 # EXTRACT CORRECT USER_IDs
 read junk user_id_dss_root_user <<< $user_id_dss_root_user
@@ -103,17 +104,17 @@ read junk user_id_NaMo_root_user <<< $user_id_NaMo_root_user
 read junk user_id_RaGa_root_user <<< $user_id_RaGa_root_user
 
 # GET PROJECT_IDs IN A VARIABLE
-project_id_dss_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM project WHERE project.name='dss'"`
-project_id_sbs_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM project WHERE project.name='sbs'"`
-project_id_rds_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM project WHERE project.name='rds'"`
-project_id_compute_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM project WHERE project.name='compute'"`
-project_id_iam_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM project WHERE project.name='iam'"`
-project_id_vpc_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM project WHERE project.name='vpc'"`
-project_id_Vishal=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM project WHERE project.name='Vishal.Chaturvedi'"`
-project_id_Val=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM project WHERE project.name='Valliappan.Letchumanan'"`
-project_id_Varughese=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM project WHERE project.name='Varughese.Cherian'"`
-project_id_NaMo_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM project WHERE project.name='NaMo'"`
-project_id_RaGa_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$(hostname) keystone -e "SELECT id FROM project WHERE project.name='RaGa'"`
+project_id_dss_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM project WHERE project.name='dss'"`
+project_id_sbs_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM project WHERE project.name='sbs'"`
+project_id_rds_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM project WHERE project.name='rds'"`
+project_id_compute_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM project WHERE project.name='compute'"`
+project_id_iam_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM project WHERE project.name='iam'"`
+project_id_vpc_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM project WHERE project.name='vpc'"`
+project_id_Vishal=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM project WHERE project.name='Vishal.Chaturvedi'"`
+project_id_Val=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM project WHERE project.name='Valliappan.Letchumanan'"`
+project_id_Varughese=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM project WHERE project.name='Varughese.Cherian'"`
+project_id_NaMo_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM project WHERE project.name='NaMo'"`
+project_id_RaGa_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM project WHERE project.name='RaGa'"`
 
 # EXTRACT CORRECT PROJECT_IDs
 read junk project_id_dss_root_user <<< $project_id_dss_root_user
