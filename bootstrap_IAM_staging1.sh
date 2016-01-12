@@ -1,13 +1,13 @@
 # USE v3 CLIENT
-. openrc admin admin
+. admin-openrc
 
-read -p "Enter mysql username : " MYSQL_USER
-read -p "Enter mysql password : " MYSQL_PASSWORD
-read -p "Enter mysql machine  : " MYSQL_HOSTNAME 
+read -p "Enter mysql: username password hostname " MYSQL_USER MYSQL_PASSWORD MYSQL_HOSTNAME 
 
 # INSERT ACTIONS IN ACTION TABLE
-python insert_action_bash_gen_script.py $MYSQL_USER $MYSQL_PASSWORD $MYSQL_HOSTNAME
-sh insert_actions_bash.sh
+# FAILING DUE TO FOREIGN KEY CONSTRAINTS ADDED WITH ACTION - SERVICE_TYPE MAPPING CHECKINS.. 
+
+# python insert_action_bash_gen_script.py $MYSQL_USER $MYSQL_PASSWORD $MYSQL_HOSTNAME
+# sh insert_actions_bash.sh
 
 # CREATE JCS_DOMAIN 
 openstack domain create --description "Contains Admin users having create account permissions" jcs_domain
@@ -65,18 +65,20 @@ openstack user create --domain Varughese.Cherian --project Varughese.Cherian Var
 openstack user create --domain NaMo --project NaMo NaMo_root_user --password P@ssword123
 openstack user create --domain RaGa --project RaGa RaGa_root_user --password P@ssword123
 
-# ATTACH ADMIN ROLE TO ROOT USER
-openstack role add --domain dss --user dss_root_user admin
-openstack role add --domain sbs --user sbs_root_user admin
-openstack role add --domain rds --user rds_root_user admin
-openstack role add --domain compute --user compute_root_user admin
-openstack role add --domain iam --user iam_root_user admin
-openstack role add --domain vpc --user vpc_root_user admin
-openstack role add --domain Vishal.Chaturvedi --user Vishal admin
-openstack role add --domain Valliappan.Letchumanan --user Val admin
-openstack role add --domain Varughese.Cherian --user Varughese admin
-openstack role add --domain NaMo --user NaMo_root_user admin
-openstack role add --domain RaGa --user RaGa_root_user admin
+# ATTACH _member_ ROLE TO ROOT USER
+
+openstack role add --domain dss --user dss_root_user _member_
+openstack role add --domain sbs --user sbs_root_user _member_
+openstack role add --domain rds --user rds_root_user _member_
+openstack role add --domain compute --user compute_root_user _member_
+openstack role add --domain iam --user iam_root_user _member_
+openstack role add --domain vpc --user vpc_root_user _member_
+openstack role add --domain Vishal.Chaturvedi --user Vishal _member_
+openstack role add --domain Valliappan.Letchumanan --user Val _member_
+openstack role add --domain Varughese.Cherian --user Varughese _member_
+openstack role add --domain NaMo --user NaMo_root_user _member_
+openstack role add --domain RaGa --user RaGa_root_user _member_
+
 
 # GET USER_IDs IN A VARIABLE
 user_id_dss_root_user=`mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "SELECT id FROM user WHERE user.name='dss_root_user'"`
@@ -99,6 +101,7 @@ read junk user_id_compute_root_user <<< $user_id_compute_root_user
 read junk user_id_iam_root_user <<< $user_id_iam_root_user
 read junk user_id_vpc_root_user <<< $user_id_vpc_root_user
 read junk user_id_Vishal <<< $user_id_Vishal
+read junk user_id_Val <<< $user_id_Val
 read junk user_id_Varughese <<< $user_id_Varughese
 read junk user_id_NaMo_root_user <<< $user_id_NaMo_root_user
 read junk user_id_RaGa_root_user <<< $user_id_RaGa_root_user
@@ -124,6 +127,7 @@ read junk project_id_compute_root_user <<< $project_id_compute_root_user
 read junk project_id_iam_root_user <<< $project_id_iam_root_user
 read junk project_id_vpc_root_user <<< $project_id_vpc_root_user
 read junk project_id_Vishal <<< $project_id_Vishal
+read junk project_id_Val <<< $project_id_Val
 read junk project_id_Varughese <<< $project_id_Varughese
 read junk project_id_NaMo_root_user <<< $project_id_NaMo_root_user
 read junk project_id_RaGa_root_user <<< $project_id_RaGa_root_user
@@ -132,26 +136,26 @@ token=`openstack token issue`
 read a b c d e f g h i j k l m n o OS_TOKEN q <<< $token
 
 # GENERATE ACCESS-SECRET KEY CREDENTIALS
-curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "$user_id_dss_root_user","blob": "{\"access\":\"c312c8c23a9e45398003b256759cef05\",\"secret\":\"39d454a4c4ea4ea1bb7ccdac7c3ba389\"}","project_id": "$project_id_dss_root_user","type": "ec2"}}' http://localhost:5000/v3/credentials
+curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "'"$user_id_dss_root_user"'","blob": "{\"access\":\"c312c8c23a9e45398003b256759cef05\",\"secret\":\"39d454a4c4ea4ea1bb7ccdac7c3ba389\"}","project_id": "'"$project_id_dss_root_user"'","type": "ec2"}}' https://iam.ind-west-1.staging.jiocloudservices.com:35357/v3/credentials
 
-curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "$user_id_sbs_root_user","blob": "{\"access\":\"cecda7a3de6d4eb997460d1524135967\",\"secret\":\"6544313324fe4b20991d77e3481a8446\"}","project_id": "$project_id_sbs_root_user","type": "ec2"}}' http://localhost:5000/v3/credentials
+curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "'"$user_id_sbs_root_user"'","blob": "{\"access\":\"cecda7a3de6d4eb997460d1524135967\",\"secret\":\"6544313324fe4b20991d77e3481a8446\"}","project_id": "'"$project_id_sbs_root_user"'","type": "ec2"}}' https://iam.ind-west-1.staging.jiocloudservices.com:35357/v3/credentials
 
-curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "$user_id_rds_root_user","blob": "{\"access\":\"62f734ab29b84ba0976795632687b53e\",\"secret\":\"506f88343c0d49849db0a04316e338b9\"}","project_id": "$project_id_rds_root_user","type": "ec2"}}' http://localhost:5000/v3/credentials
+curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "'"$user_id_rds_root_user"'","blob": "{\"access\":\"62f734ab29b84ba0976795632687b53e\",\"secret\":\"506f88343c0d49849db0a04316e338b9\"}","project_id": "'"$project_id_rds_root_user"'","type": "ec2"}}' https://iam.ind-west-1.staging.jiocloudservices.com:35357/v3/credentials
 
-curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "$user_id_compute_root_user","blob": "{\"access\":\"9c09627868e647f393ab14e2f29ca9c1\",\"secret\":\"8bd611959ba7491c98ede613d1a461f6\"}","project_id": "$project_id_compute_root_user","type": "ec2"}}' http://localhost:5000/v3/credentials
+curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "'"$user_id_compute_root_user"'","blob": "{\"access\":\"9c09627868e647f393ab14e2f29ca9c1\",\"secret\":\"8bd611959ba7491c98ede613d1a461f6\"}","project_id": "'"$project_id_compute_root_user"'","type": "ec2"}}' https://iam.ind-west-1.staging.jiocloudservices.com:35357/v3/credentials
 
-curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "$user_id_iam_root_user","blob": "{\"access\":\"55a51e48a6ad4f34b2a270d1fc218800\",\"secret\":\"e8caa31664404adda03d18da622f9fde\"}","project_id": "$project_id_iam_root_user","type": "ec2"}}' http://localhost:5000/v3/credentials
+curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "'"$user_id_iam_root_user"'","blob": "{\"access\":\"55a51e48a6ad4f34b2a270d1fc218800\",\"secret\":\"e8caa31664404adda03d18da622f9fde\"}","project_id": "'"$project_id_iam_root_user"'","type": "ec2"}}' https://iam.ind-west-1.staging.jiocloudservices.com:35357/v3/credentials
 
-curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "$user_id_vpc_root_user","blob": "{\"access\":\"1b0b5129b0fb47d393ca3d1ab76d6059\",\"secret\":\"be14df3237f94bd3b73ced73a35a6515\"}","project_id": "$project_id_vpc_root_user","type": "ec2"}}' http://localhost:5000/v3/credentials
+curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "'"$user_id_vpc_root_user"'","blob": "{\"access\":\"1b0b5129b0fb47d393ca3d1ab76d6059\",\"secret\":\"be14df3237f94bd3b73ced73a35a6515\"}","project_id": "'"$project_id_vpc_root_user"'","type": "ec2"}}' https://iam.ind-west-1.staging.jiocloudservices.com:35357/v3/credentials
 
-curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "$user_id_Vishal","blob": "{\"access\":\"5bf272d763904dc4974c21c643620977\",\"secret\":\"c0b0b675a7854b4b912abc0a004953e4\"}","project_id": "$project_id_Vishal","type": "ec2"}}' http://localhost:5000/v3/credentials
+curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "'"$user_id_Vishal"'","blob": "{\"access\":\"5bf272d763904dc4974c21c643620977\",\"secret\":\"c0b0b675a7854b4b912abc0a004953e4\"}","project_id": "'"$project_id_Vishal"'","type": "ec2"}}' https://iam.ind-west-1.staging.jiocloudservices.com:35357/v3/credentials
 
-curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "$user_id_Val","blob": "{\"access\":\"340641dcca8e4189811ed143b73fb2f9\",\"secret\":\"5ddb5fd0f0c34fc4bd61cc3022158d30\"}","project_id": "$project_id_Val","type": "ec2"}}' http://localhost:5000/v3/credentials
+curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "'"$user_id_Val"'","blob": "{\"access\":\"340641dcca8e4189811ed143b73fb2f9\",\"secret\":\"5ddb5fd0f0c34fc4bd61cc3022158d30\"}","project_id": "'"$project_id_Val"'","type": "ec2"}}' https://iam.ind-west-1.staging.jiocloudservices.com:35357/v3/credentials
 
-curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "$user_id_Varughese","blob": "{\"access\":\"8a3c3250a88445be8db33df5bece93ca\",\"secret\":\"76c8e297a4064b548d69a0f1776e101a\"}","project_id": "$project_id_Varughese","type": "ec2"}}' http://localhost:5000/v3/credentials
+curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "'"$user_id_Varughese"'","blob": "{\"access\":\"8a3c3250a88445be8db33df5bece93ca\",\"secret\":\"76c8e297a4064b548d69a0f1776e101a\"}","project_id": "'"$project_id_Varughese"'","type": "ec2"}}' https://iam.ind-west-1.staging.jiocloudservices.com:35357/v3/credentials
 
-curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "$user_id_NaMo_root_user","blob": "{\"access\":\"e605d3a5000a4a04a365d2ffedd315bc\",\"secret\":\"b8067dde244d4f9c847e869653fd8df9\"}","project_id": "$project_id_NaMo_root_user","type": "ec2"}}' http://localhost:5000/v3/credentials
+curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "'"$user_id_NaMo_root_user"'","blob": "{\"access\":\"e605d3a5000a4a04a365d2ffedd315bc\",\"secret\":\"b8067dde244d4f9c847e869653fd8df9\"}","project_id": "'"$project_id_NaMo_root_user"'","type": "ec2"}}' https://iam.ind-west-1.staging.jiocloudservices.com:35357/v3/credentials
 
-curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "$user_id_RaGa_root_user","blob": "{\"access\":\"fc63f873343d4cf083735c52d93c137f\",\"secret\":\"598822379302429bbf482fd50fc1598f\"}","project_id": "$$project_id_RaGa_root_user","type": "ec2"}}' http://localhost:5000/v3/credentials
+curl -i -H "Content-Type: application/json" -H "X-Auth-Token: $OS_TOKEN" -d '{"credential":{"user_id": "'"$user_id_RaGa_root_user"'","blob": "{\"access\":\"fc63f873343d4cf083735c52d93c137f\",\"secret\":\"598822379302429bbf482fd50fc1598f\"}","project_id": "'"$project_id_RaGa_root_user"'","type": "ec2"}}' https://iam.ind-west-1.staging.jiocloudservices.com:35357/v3/credentials
 
 
