@@ -3,17 +3,6 @@
 
 read -p "Enter mysql: username password hostname " MYSQL_USER MYSQL_PASSWORD MYSQL_HOSTNAME 
 
-# SPECIAL SERVICE, ACTION
-mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "INSERT INTO service (id, type, enabled, extra) VALUES ('8524c10f6aea4c2f89837ba285f153d7','*' ,'1'  ,'' )"
-mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "INSERT INTO action (id, action_name, service_type) VALUES ('374bc66468804f1ca2bee29b21ceddbf','jrn:jcs:*' ,'*' )"
-mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "INSERT INTO action (id, action_name, service_type) VALUES ('b62f8b9af5dc4129aff77bfc687baa01','jrn:jcs:iam:*' ,'iam' )"
-mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "INSERT INTO action (id, action_name, service_type) VALUES ('da7f4c94f23e4630bb3ef42081ef98bd','jrn:jcs:vpc:*' ,'vpc' )"
-mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "INSERT INTO action (id, action_name, service_type) VALUES ('5b90e2486a2d4ce1b1abe2c7d1bd74f6','jrn:jcs:rds:*' ,'rds' )"
-mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "INSERT INTO action (id, action_name, service_type) VALUES ('223cd3aa692b4523b786a3a22dd48e9d','jrn:jcs:dss:*' ,'dss' )"
-mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "INSERT INTO action (id, action_name, service_type) VALUES ('97ff21048bbb454cbbdfc74bc45e285e','jrn:jcs:sbs:*' ,'sbs' )"
-mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "INSERT INTO action (id, action_name, service_type) VALUES ('c219f18e41584553a9841d5fc4d51066','jrn:jcs:compute:*' ,'compute' )"
-
-
 # INSERT SERVICE, ACTION, RESOURCE_TYPE, ACTION_RESOURCE_TYPE_MAPPING IN SERVICE TABLE
 mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "INSERT INTO service (id, type, enabled, extra) VALUES ('M4sO5yD3qJ8jF0iX0bH3aT5fH4zD1lL2','iam' ,'1'  ,'' )"
 mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h$MYSQL_HOSTNAME keystone -e "INSERT INTO service (id, type, enabled, extra) VALUES ('S6dK6iX4tC2vW1xR1tF1pE0kK0hV9xE5','vpc' ,'1'  ,'' )"
